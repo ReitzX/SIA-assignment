@@ -5,30 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Posts per User</title>
     <script defer src="script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Posts</h1>
+<body class="bg-gray-100 p-8">
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Author ID</th>
-            </tr>
-        </thead>
-        <tbody id="postsTable">
-            
-        </tbody>
-    </table>
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Posts</h1>
 
-    <h2>Submit a New Post</h2>
-    <form id="postForm">
-        <input type="text" id="title" placeholder="Title" required />
-        <input type="text" id="content" placeholder="Content" required />
-        <input type="number" id="authorId" placeholder="Author ID" required />
-        <button type="submit">Submit</button>
-    </form>
+        <div class="overflow-x-auto">
+            <table class="min-w-full border-collapse border border-gray-300 shadow-md rounded-lg">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="border border-gray-300 px-4 py-2">ID</th>
+                        <th class="border border-gray-300 px-4 py-2">Title</th>
+                        <th class="border border-gray-300 px-4 py-2">Content</th>
+                        <th class="border border-gray-300 px-4 py-2">Author ID</th>
+                    </tr>
+                </thead>
+                <tbody id="postsTable" class="bg-white divide-y divide-gray-200">
+                    <!-- Data will be inserted here dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="text-xl font-semibold text-gray-700 mt-6">Submit a New Post</h2>
+        <form id="postForm" class="mt-4 space-y-3">
+            <input type="text" id="title" placeholder="Title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="text" id="content" placeholder="Content" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="number" id="authorId" placeholder="Author ID" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <button type="submit" class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300">Submit</button>
+        </form>
+    </div>
+
 </body>
 </html>
