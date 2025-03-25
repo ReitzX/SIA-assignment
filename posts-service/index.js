@@ -22,7 +22,7 @@ const typeDefs = `#graphql
     id: ID!
     title: String!
     content: String!
-    authorId: Int!
+    userId: Int!
   }
 
   type Query {
@@ -30,7 +30,7 @@ const typeDefs = `#graphql
   }
 
   type Mutation {
-    createPost(title: String!, content: String!, authorId: Int!): Post!
+    createPost(title: String!, content: String!, userId: Int!): Post!
     deletePost(id: ID!): Post
   }
 
@@ -45,9 +45,9 @@ const resolvers = {
     posts: () => prisma.post.findMany(),
   },
   Mutation: {
-    createPost: async (_, { title, content, authorId }) => {
+    createPost: async (_, { title, content, userId }) => {
       const newPost = await prisma.post.create({
-        data: { title, content, authorId },
+        data: { title, content, userId },
       });
 
       // Publish the new post event
@@ -83,25 +83,35 @@ const resolvers = {
 // Create schema
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-// Create WebSocket server for subscriptions
-const httpServer = createServer(app);
-const wsServer = new WebSocketServer({
-  server: httpServer,
-  path: "/graphql",
-});
-useServer({ schema }, wsServer);
-
 // Create Apollo Server
 const server = new ApolloServer({ schema });
 
 async function startServer() {
   await server.start();
-
   app.use("/graphql", expressMiddleware(server));
+
+  // Create HTTP & WebSocket Server
+  const httpServer = createServer(app);
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/graphql",
+  });
+
+  useServer({ schema }, wsServer);
 
   httpServer.listen(4002, () => {
     console.log("🚀 GraphQL & WebSocket Server running on http://localhost:4002/graphql");
   });
 }
+
+process.on("SIGINT", async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});
 
 startServer();

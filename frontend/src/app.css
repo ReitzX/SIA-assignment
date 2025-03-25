@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .app-container {
+    width: 80%;
+    max-width: 800px;
+    background: #fff;
+    padding: 100px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .post-form input, .post-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .post-form button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .post-form button:hover {
+    background-color: #218838;
+  }
+  
+  .posts-table {
+    margin-top: 20px;
+  }
+  
+  .posts-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  
+  .posts-table th, .posts-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .posts-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .notification-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .notification {
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .notification.success {
+    background-color: #28a745;
+  }
+  
+  .notification.error {
+    background-color: #dc3545;
+  }
