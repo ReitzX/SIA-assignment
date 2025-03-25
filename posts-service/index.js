@@ -10,16 +10,13 @@ const { WebSocketServer } = require("ws");
 const { useServer } = require("graphql-ws/lib/use/ws");
 const { PubSub } = require("graphql-subscriptions");
 
-// Initialize Prisma and PubSub
 const prisma = new PrismaClient();
 const pubsub = new PubSub();
 
-// Express app setup
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// GraphQL Schema
 const typeDefs = `#graphql
   type Post {
     id: ID!
@@ -34,10 +31,12 @@ const typeDefs = `#graphql
 
   type Mutation {
     createPost(title: String!, content: String!, authorId: Int!): Post!
+    deletePost(id: ID!): Post
   }
 
   type Subscription {
     postAdded: Post!
+    postDeleted: Post!
   }
 `;
 
@@ -56,10 +55,27 @@ const resolvers = {
 
       return newPost;
     },
+    deletePost: async (_, { id }) => {
+      const post = await prisma.post.findUnique({ where: { id: Number(id) } });
+
+      if (!post) {
+        throw new Error("Post not found");
+      }
+
+      await prisma.post.delete({ where: { id: Number(id) } });
+
+      // Publish the deleted post event
+      pubsub.publish("POST_DELETED", { postDeleted: post });
+
+      return post;
+    },
   },
   Subscription: {
     postAdded: {
-      subscribe: () => pubsub.asyncIterator(["POST_ADDED"]),
+      subscribe: () => pubsub.asyncIterableIterator(["POST_ADDED"]),
+    },
+    postDeleted: {
+      subscribe: () => pubsub.asyncIterableIterator(["POST_DELETED"]),
     },
   },
 };
@@ -80,7 +96,7 @@ const server = new ApolloServer({ schema });
 
 async function startServer() {
   await server.start();
-  
+
   app.use("/graphql", expressMiddleware(server));
 
   httpServer.listen(4002, () => {
@@ -89,5 +105,3 @@ async function startServer() {
 }
 
 startServer();
-
-
