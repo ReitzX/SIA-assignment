@@ -1,7 +1,6 @@
-// frontend/src/App.jsx
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useSubscription, gql } from '@apollo/client';
-
+import './app.css';
 // GraphQL operations
 const GET_POSTS = gql`
   query GetPosts {
@@ -9,7 +8,7 @@ const GET_POSTS = gql`
       id
       title
       content
-      authorId
+      userId
     }
   }
 `;
@@ -20,18 +19,18 @@ const POST_ADDED = gql`
       id
       title
       content
-      authorId
+      userId
     }
   }
 `;
 
 const CREATE_POST = gql`
-  mutation CreatePost($title: String!, $content: String!, $authorId: Int!) {
-    createPost(title: $title, content: $content, authorId: $authorId) {
+  mutation CreatePost($title: String!, $content: String!, $userId: Int!) {
+    createPost(title: $title, content: $content, userId: $userId) {
       id
       title
       content
-      authorId
+      userId
     }
   }
 `;
@@ -40,7 +39,7 @@ function App() {
   const [formState, setFormState] = useState({
     title: '',
     content: '',
-    authorId: 1
+    userId: 1
   });
 
   // Fetch posts
@@ -57,12 +56,11 @@ function App() {
     }
   });
 
-  // Subscription for new posts
+
   useSubscription(POST_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       showNotification("New post added!", "success");
-      // Apollo Client will automatically update the cache
-      refetch(); // Optional: refetch to update the UI
+      refetch(); 
     }
   });
 
@@ -94,9 +92,9 @@ function App() {
         />
         <input
           type="number"
-          value={formState.authorId}
-          onChange={(e) => setFormState({ ...formState, authorId: parseInt(e.target.value) })}
-          placeholder="Author ID"
+          value={formState.userId}
+          onChange={(e) => setFormState({ ...formState, userId: parseInt(e.target.value) })}
+          placeholder="User ID"
           min="1"
         />
         <button type="submit">Create Post</button>
@@ -110,7 +108,7 @@ function App() {
               <th>ID</th>
               <th>Title</th>
               <th>Content</th>
-              <th>Author ID</th>
+              <th>User ID</th>
             </tr>
           </thead>
           <tbody>
@@ -119,7 +117,7 @@ function App() {
                 <td>{post.id}</td>
                 <td>{post.title}</td>
                 <td>{post.content}</td>
-                <td>{post.authorId}</td>
+                <td>{post.userId}</td>
               </tr>
             ))}
           </tbody>
